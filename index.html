@@ -5,32 +5,44 @@
   <title>Recept Indienen</title>
   <style>
     /* Base styles */
+    html {
+      font-size: 16px; /* base */
+    }
     body {
       font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 1rem;
+      margin: 0;
+      padding: 0;
       background: #fafafa;
       color: #333;
+      width: 100vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     h1 {
       text-align: center;
-      margin-bottom: 1rem;
-      font-size: 2rem;
+      margin: 1rem 0 1rem 0;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      width: 90%;
+      max-width: 600px;
     }
     form {
       background: white;
-      padding: 1.5rem;
+      padding: 1rem;
       border-radius: 6px;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      width: 100%;
+      width: 90%;
+      max-width: 600px;
       box-sizing: border-box;
+      margin-bottom: 1rem;
     }
     label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 3vw, 1.1rem);
     }
     input[type="text"], textarea {
       width: 100%;
@@ -38,8 +50,9 @@
       margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
-      font-size: 1rem;
+      font-size: clamp(0.95rem, 3vw, 1rem);
       box-sizing: border-box;
+      font-family: inherit;
     }
     textarea {
       resize: vertical;
@@ -49,23 +62,23 @@
       border: none;
       color: white;
       padding: 0.75rem 1.5rem;
-      font-size: 1rem;
+      font-size: clamp(1rem, 3vw, 1.2rem);
       border-radius: 4px;
       cursor: pointer;
-      margin-top: 1rem;
-      transition: background-color 0.3s ease;
       width: 100%;
-      box-sizing: border-box;
       max-width: 400px;
+      box-sizing: border-box;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 1rem auto 0 auto;
+      transition: background-color 0.3s ease;
+      font-family: inherit;
     }
     button[type="submit"]:hover, #viewRecipesBtn:hover {
       background-color: #45a049;
     }
     #categorySuggestions {
       margin-bottom: 1rem;
+      width: 100%;
     }
     #categorySuggestions button {
       background: #ddd;
@@ -74,8 +87,9 @@
       padding: 0.3rem 0.6rem;
       margin: 0 0.3rem 0.3rem 0;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
       transition: background-color 0.2s ease;
+      font-family: inherit;
     }
     #categorySuggestions button:hover {
       background: #ccc;
@@ -84,30 +98,24 @@
       margin-top: 1rem;
       font-weight: bold;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       min-height: 1.5em;
+      width: 90%;
+      max-width: 600px;
     }
 
-    /* Mobile responsiveness */
+    /* Remove default padding and margin on smaller devices */
     @media (max-width: 600px) {
       body {
-        margin: 1rem;
-        padding: 0.5rem;
+        margin: 0;
+        padding: 0;
+      }
+      form {
+        padding: 1rem 0.75rem;
+        width: 95%;
       }
       h1 {
-        font-size: 1.5rem;
-      }
-      label {
-        font-size: 1rem;
-      }
-      input[type="text"], textarea {
-        font-size: 1.1rem;
-        padding: 0.6rem 0.8rem;
-      }
-      button[type="submit"], #viewRecipesBtn {
-        font-size: 1.2rem;
-        padding: 0.9rem 1.5rem;
-        max-width: 100%;
+        margin-top: 1rem;
       }
     }
   </style>
