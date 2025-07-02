@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Recept Indienen</title>
   <style>
+    /* Mobile first: no padding/margin, fluid fonts */
     body {
       font-family: Arial, sans-serif;
-      max-width: 100%;       /* Full width on mobile */
-      margin: 0;             /* No margin */
-      padding: 0;            /* No padding */
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
       background: #fafafa;
       color: #333;
-      font-size: clamp(1rem, 4vw, 1.3rem); /* Fluid font size */
+      font-size: clamp(1rem, 4vw, 1.3rem);
       box-sizing: border-box;
     }
     h1 {
@@ -88,6 +89,32 @@
       text-align: center;
       font-size: clamp(1rem, 3vw, 1.1rem);
       min-height: 1.5em;
+    }
+
+    /* For larger screens: restore original style */
+    @media (min-width: 601px) {
+      body {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 1rem;
+        font-size: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      label {
+        font-size: 1.1rem;
+      }
+      input[type="text"], textarea {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+      }
+      button[type="submit"], #viewRecipesBtn {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        max-width: 400px;
+      }
     }
   </style>
 </head>
