@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   const content = Buffer.from(JSON.stringify(recipe, null, 2)).toString('base64');
 
-  const response = await fetch(`https://api.github.com/repos/YOUR_USER/YOUR_REPO/contents/recipes/${filename}`, {
+  const response = await fetch(`https://api.github.com/repos/StanKwast/koken/contents/recipes/${filename}`, {
     method: "PUT",
     headers: {
       "Authorization": `token ${process.env.GITHUB_TOKEN}`,
