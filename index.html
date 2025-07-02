@@ -35,7 +35,7 @@
 
       const filename = recipe.title.toLowerCase().replace(/\s+/g, "_") + "_" + Date.now() + ".json";
 
-      const response = await fetch("https://recept-form-czminkuvq-stankwasts-projects.vercel.app/api/submit", {
+      const response = await fetch("https://recept-form.vercel.app/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename, recipe })
