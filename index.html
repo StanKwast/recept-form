@@ -48,6 +48,7 @@
       border-radius: 4px;
       cursor: pointer;
       margin-top: 1rem;
+      transition: background-color 0.3s ease;
     }
     button[type="submit"]:hover, #viewRecipesBtn:hover {
       background-color: #45a049;
@@ -63,6 +64,7 @@
       margin: 0 0.25rem 0.25rem 0;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: background-color 0.2s ease;
     }
     #categorySuggestions button:hover {
       background: #ccc;
@@ -71,15 +73,41 @@
       margin-top: 1rem;
       font-weight: bold;
     }
+
+    /* Center the "Bekijk recepten" button */
+    #viewRecipesBtn {
+      display: block;
+      margin: 1.5rem auto 0 auto;
+      max-width: 200px;
+      width: 90%;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      body {
+        margin: 1rem;
+        padding: 0.5rem;
+      }
+      form {
+        padding: 1rem;
+      }
+      input[type="text"], textarea {
+        font-size: 1rem;
+      }
+      button[type="submit"], #viewRecipesBtn {
+        font-size: 1.1rem;
+        padding: 0.8rem 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Recept Indienen</h1>
+  <h1>Recepten Indienen</h1>
   <form id="recipeForm">
     <label>Titel: <input type="text" name="title" required></label>
 
-    <label>Categorieën (meerdere toevoegen met komma’s of klik op de knoppen hieronder):</label>
-    <input type="text" id="categoryInput" name="categoryInput" placeholder="bijv. ontbijt, vegan" autocomplete="off" />
+    <label>Categorieën (toevoegen met komma’s ertussen of klik op de knoppen hieronder):</label>
+    <input type="text" id="categoryInput" name="categoryInput" placeholder="bijv. ontbijt, Italiaans, oven" autocomplete="off" />
     <div id="categorySuggestions" aria-label="Categorie suggesties"></div>
 
     <label>Ingrediënten:<br>
