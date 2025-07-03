@@ -1,7 +1,10 @@
 {
   "rewrites": [
     { "source": "/login.html", "destination": "/login.html" },
+    { "source": "/favicon.ico", "destination": "/favicon.ico" },
     { "source": "/protect.js", "destination": "/protect.js" },
+
+    { "source": "/index.html", "destination": "/index.html" },
 
     { "source": "/:file(css|js|png|jpg|jpeg|svg|gif)", "destination": "/:file" },
 
