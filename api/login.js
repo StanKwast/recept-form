@@ -11,7 +11,7 @@ export default function handler(req, res) {
   // Check password against environment variable
   if (password === process.env.STIE_PASSWORD) {
     // Set a cookie valid for 1 day
-    res.setHeader('Set-Cookie', `auth=1; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax`);
+    res.setHeader('Set-Cookie', `auth=1; Path=/; Max-Age=86400; SameSite=Lax`);
     return res.status(200).json({ message: 'Login successful' });
   } else {
     return res.status(401).json({ message: 'Invalid password' });
