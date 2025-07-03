@@ -207,11 +207,11 @@
         title: formData.get("title").trim(),
         category: categories,
         ingredients: formData.get("ingredients").trim().split("\n").map(s => s.trim()).filter(Boolean),
-        instructions: formData.get("instructions").trim().split("\n").map(s => s.trim()).filter(Boolean),
+        instructions: formData.get("instructions").trim().split("\n").map(s => s.trim());
         timestamp: new Date().toISOString()
       };
 
-      const filename = recipe.title.toLowerCase().replace(/\s+/g, "_") + "_" + Date.now() + ".json";
+      const filename = recipe.title.toLowerCase().replace(/\s+/g, "_") + ".json";
 
       const status = document.getElementById("status");
       status.textContent = "Versturen...";
