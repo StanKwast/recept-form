@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+  <h2>Wachtwoord vereist</h2>
+  <form onsubmit="setAuth(event)">
+    <input type="password" id="pw" placeholder="Voer wachtwoord in" required>
+    <button type="submit">Inloggen</button>
+  </form>
+  <p id="error" style="color:red;"></p>
+  <script>
+    async function setAuth(e) {
+      e.preventDefault();
+      const pw = document.getElementById("pw").value;
+      document.cookie = `auth=${pw}; path=/; max-age=86400`; // 1 day
+      // Test if it works
+      const res = await fetch('/');
+      if (res.redirected) {
+        document.getElementById('error').textContent = "Ongeldig wachtwoord.";
+      } else {
+        window.location.href = '/';
+      }
+    }
+  </script>
+</body>
+</html>
