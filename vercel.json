@@ -1,15 +1,10 @@
 {
   "rewrites": [
-    {
-      "source": "/((?!login.html|favicon.ico|protect.js|.*\\.(css|js|png|jpg|jpeg|svg|gif)).*)",
-      "has": [
-        {
-          "type": "cookie",
-          "key": "auth",
-          "value": "1"
-        }
-      ],
-      "destination": "/login.html"
-    }
+    { "source": "/login.html", "destination": "/login.html" },
+    { "source": "/protect.js", "destination": "/protect.js" },
+
+    { "source": "/:file(css|js|png|jpg|jpeg|svg|gif)", "destination": "/:file" },
+
+    { "source": "/:path*", "destination": "/index.html" }
   ]
 }
