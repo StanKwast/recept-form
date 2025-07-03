@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!login.html|favicon.ico|protect.js|.*\\.(css|js|png|jpg|jpeg|svg|gif)).*)",
+      "has": [
+        {
+          "type": "cookie",
+          "key": "auth",
+          "value": "1"
+        }
+      ],
+      "destination": "/login.html"
+    }
+  ]
+}

@@ -1,29 +1,74 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 5rem auto;
+      padding: 1rem;
+      text-align: center;
+      background: #fafafa;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      font-size: 1.1rem;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #error {
+      color: red;
+      min-height: 1.2rem;
+    }
+  </style>
 </head>
 <body>
   <h2>Wachtwoord vereist</h2>
-  <form onsubmit="setAuth(event)">
-    <input type="password" id="pw" placeholder="Voer wachtwoord in" required>
+  <form onsubmit="checkPassword(event)">
+    <input type="password" id="pw" placeholder="Wachtwoord" required autocomplete="off" />
     <button type="submit">Inloggen</button>
   </form>
-  <p id="error" style="color:red;"></p>
+  <p id="error"></p>
+
   <script>
-    async function setAuth(e) {
-      e.preventDefault();
-      const pw = document.getElementById("pw").value;
-      document.cookie = `auth=${pw}; path=/; max-age=86400`; // 1 day
-      // Test if it works
-      const res = await fetch('/');
-      if (res.redirected) {
-        document.getElementById('error').textContent = "Ongeldig wachtwoord.";
+  async function checkPassword(e) {
+    e.preventDefault();
+    const pw = document.getElementById("pw").value;
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+
+      if (res.ok) {
+        window.location.href = '/'; // Redirect on success
       } else {
-        window.location.href = '/';
+        const data = await res.json();
+        document.getElementById("error").textContent = data.message || 'Login failed';
       }
+    } catch (err) {
+      document.getElementById("error").textContent = 'Network error';
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
