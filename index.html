@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Recept Indienen</title>
   <style>
-    /* Mobile first: no padding/margin, fluid fonts */
     body {
       font-family: Arial, sans-serif;
       max-width: 100%;
@@ -90,8 +89,6 @@
       font-size: clamp(1rem, 3vw, 1.1rem);
       min-height: 1.5em;
     }
-
-    /* For larger screens: restore original style */
     @media (min-width: 601px) {
       body {
         max-width: 600px;
@@ -121,7 +118,10 @@
 <body>
   <h1>Recept Indienen</h1>
   <form id="recipeForm">
-    <label>Titel: <input type="text" name="title" required></label>
+    <label>Titel:
+      <input type="text" name="title" id="titleInput" list="titleList" required>
+      <datalist id="titleList"></datalist>
+    </label>
 
     <label>Categorieën (meerdere toevoegen met komma’s of klik op de knoppen hieronder):</label>
     <input type="text" id="categoryInput" name="categoryInput" placeholder="bijv. ontbijt, vegan" autocomplete="off" />
@@ -192,9 +192,57 @@
       }
     }
 
+    async function fetchAllRecipes() {
+      try {
+        const res = await fetch("https://api.github.com/repos/StanKwast/koken/contents/recipes");
+        if (!res.ok) return [];
+        const files = await res.json();
+
+        const recipes = [];
+        for (const file of files) {
+          if (!file.name.endsWith(".json")) continue;
+          const recipeRes = await fetch(file.download_url);
+          if (!recipeRes.ok) continue;
+          const data = await recipeRes.json();
+          recipes.push({ title: data.title, data });
+        }
+        return recipes;
+      } catch {
+        return [];
+      }
+    }
+
+    function populateTitleDatalist(recipes) {
+      const datalist = document.getElementById("titleList");
+      datalist.innerHTML = "";
+      recipes.forEach(r => {
+        const option = document.createElement("option");
+        option.value = r.title;
+        datalist.appendChild(option);
+      });
+    }
+
+    function fillRecipeForm(recipe) {
+      document.querySelector('input[name="title"]').value = recipe.title;
+      document.querySelector('input[name="categoryInput"]').value = Array.isArray(recipe.category)
+        ? recipe.category.join(", ")
+        : recipe.category || "";
+      document.querySelector('textarea[name="ingredients"]').value = (recipe.ingredients || []).join("\n");
+      document.querySelector('textarea[name="instructions"]').value = (recipe.instructions || []).join("\n");
+    }
+
     window.addEventListener("DOMContentLoaded", async () => {
       const categories = await fetchExistingCategories();
       showCategorySuggestions(categories);
+
+      const allRecipes = await fetchAllRecipes();
+      populateTitleDatalist(allRecipes);
+
+      const titleInput = document.getElementById("titleInput");
+      titleInput.addEventListener("change", () => {
+        const match = allRecipes.find(r => r.title === titleInput.value.trim());
+        if (match) fillRecipeForm(match.data);
+      });
     });
 
     document.getElementById("recipeForm").addEventListener("submit", async function (e) {
@@ -206,8 +254,8 @@
       const recipe = {
         title: formData.get("title").trim(),
         category: categories,
-        ingredients: formData.get("ingredients").trim().split("\n").map(s => s.trim()).filter(Boolean),
-        instructions: formData.get("instructions").trim().split("\n").map(s => s.trim());
+        ingredients: formData.get("ingredients").split("\n"),
+        instructions: formData.get("instructions").split("\n"),
         timestamp: new Date().toISOString()
       };
 
