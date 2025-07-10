@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recept Indienen</title>
+  <title>Recept toevoegen</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -116,19 +116,19 @@
   </style>
 </head>
 <body>
-  <h1>Recept Indienen</h1>
+  <h1>Recept toevoegen</h1>
   <form id="recipeForm">
     <label>Titel:
       <input type="text" name="title" id="titleInput" list="titleList" required>
       <datalist id="titleList"></datalist>
     </label>
 
-    <label>Categorieën (meerdere toevoegen met komma’s of klik op de knoppen hieronder):</label>
-    <input type="text" id="categoryInput" name="categoryInput" placeholder="Ontbij, rijst, pasta, aardappel, snel, hapjes, bijgerecht" autocomplete="off" />
+    <label>Categorieën:</label>
+    <input type="text" id="categoryInput" name="categoryInput" placeholder="Je kan meerdere toevoegen met komma’s of klik op de knoppen hieronder" autocomplete="off" />
     <div id="categorySuggestions" aria-label="Categorie suggesties"></div>
 
     <label>Ingrediënten:<br>
-      <textarea name="ingredients" rows="5" required placeholder="2 aubergines, in plakken van 1 cm
+      <textarea name="ingredients" rows="10" required placeholder="2 aubergines, in plakken van 1 cm
 1 ciabatta, in plakken van 5 mm
 Hand vol verse basilicumblaadjes
 300 g mozzarella, in plakjes
@@ -141,7 +141,7 @@ Zout en peper naar smaak
     </label>
 
     <label>Instructies:<br>
-      <textarea name="instructions" rows="5" required placeholder="Verhit 2 eetlepels olijfolie in een koekenpan op middelhoog vuur. Bak de ui 5 minuten tot deze zacht en glazig is. Voeg de knoflook toe en bak nog 2 minuten mee. Roer de passata erdoor, breng aan de kook, zet het vuur lager en laat 10 minuten zachtjes pruttelen. Laat afkoelen tot gebruik.
+      <textarea name="instructions" rows="10" required placeholder="Verhit 2 eetlepels olijfolie in een koekenpan op middelhoog vuur. Bak de ui 5 minuten tot deze zacht en glazig is. Voeg de knoflook toe en bak nog 2 minuten mee. Roer de passata erdoor, breng aan de kook, zet het vuur lager en laat 10 minuten zachtjes pruttelen. Laat afkoelen tot gebruik.
         
 Verwarm de oven voor op 180 graden Celsius. Verhit 3 eetlepels olijfolie in een grote koekenpan op middelhoog vuur. Bak de aubergine in porties ongeveer 3 minuten per kant tot ze lichtbruin zijn. Laat uitlekken op keukenpapier.
 
