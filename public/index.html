@@ -4,137 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Recept toevoegen</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-      background: #fafafa;
-      color: #333;
-      font-size: clamp(1rem, 4vw, 1.3rem);
-      box-sizing: border-box;
-    }
-    h1 {
-      text-align: center;
-      margin: 1rem 0;
-      font-size: clamp(1.5rem, 6vw, 2.5rem);
-    }
-    form {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 6px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      width: 100%;
-      box-sizing: border-box;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      font-size: clamp(1rem, 3vw, 1.1rem);
-    }
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: clamp(1rem, 3vw, 1.1rem);
-      box-sizing: border-box;
-    }
-    textarea {
-      resize: vertical;
-    }
-    button[type="submit"] {
-      background-color: #4caf50;
-      border: none;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      box-sizing: border-box;
-      max-width: 400px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #viewRecipesBtn {
-      background-color: white;
-      border: none;
-      color: #333;
-      padding: 0.75rem 1.5rem;
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      box-sizing: border-box;
-      max-width: 400px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    button[type="submit"]:hover {
-      background-color: #45a049;
-    }
-    #viewRecipesBtn:hover {
-      background-color: #45a049;
-      color: white;
-    }
-    #categorySuggestions {
-      margin-bottom: 1rem;
-    }
-    #categorySuggestions button {
-      background: #ddd;
-      border: none;
-      border-radius: 3px;
-      padding: 0.3rem 0.6rem;
-      margin: 0 0.3rem 0.3rem 0;
-      cursor: pointer;
-      font-size: clamp(0.9rem, 2.5vw, 1rem);
-      transition: background-color 0.2s ease;
-    }
-    #categorySuggestions button:hover {
-      background: #ccc;
-    }
-    #status {
-      margin-top: 1rem;
-      font-weight: bold;
-      text-align: center;
-      font-size: clamp(1rem, 3vw, 1.1rem);
-      min-height: 1.5em;
-    }
-    @media (min-width: 601px) {
-      body {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 1rem;
-        font-size: 1rem;
-      }
-      h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-      label {
-        font-size: 1.1rem;
-      }
-      input[type="text"], textarea {
-        font-size: 1rem;
-        padding: 0.5rem 0.75rem;
-      }
-      button[type="submit"], #viewRecipesBtn {
-        font-size: 1rem;
-        padding: 0.75rem 1.5rem;
-        max-width: 400px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Recept toevoegen</h1>
@@ -145,8 +15,8 @@
     </label>
 
     <label>Categorieën:</label>
-    <input type="text" id="categoryInput" name="categoryInput" placeholder="Toevoegen met komma’s ertussen" autocomplete="off" />
     <div id="categorySuggestions" aria-label="Categorie suggesties"></div>
+    <input type="text" id="categoryInput" name="categoryInput" placeholder="Voeg nieuwe categorie toe met een Enter" autocomplete="off" />
 
     <label>Ingrediënten:<br>
       <textarea name="ingredients" rows="10" required placeholder="2 aubergines, in plakken van 1 cm
@@ -179,6 +49,7 @@ Bestrooi de bovenkant met Parmezaanse kaas, breng op smaak met zout en peper en 
   <p id="status"></p>
 
   <script>
+    // Fetch categories by iterating recipe files in the GitHub repo
     async function fetchExistingCategories() {
       try {
         const res = await fetch("https://api.github.com/repos/StanKwast/koken/contents/recipes");
@@ -188,55 +59,86 @@ Bestrooi de bovenkant met Parmezaanse kaas, breng op smaak met zout en peper en 
         const categoriesSet = new Set();
 
         await Promise.all(files.map(async (file) => {
-          if (!file.name.endsWith(".json")) return;
+          if (!file.name.endsWith('.json')) return;
           const recipeRes = await fetch(file.download_url);
           if (!recipeRes.ok) return;
           const recipe = await recipeRes.json();
           if (recipe.category) {
-            if (Array.isArray(recipe.category)) {
-              recipe.category.forEach(cat => categoriesSet.add(cat.trim()));
-            } else {
-              categoriesSet.add(recipe.category.trim());
-            }
+            if (Array.isArray(recipe.category)) recipe.category.forEach(cat => categoriesSet.add(cat.trim()));
+            else categoriesSet.add(String(recipe.category).trim());
           }
         }));
 
         return Array.from(categoriesSet).sort();
-      } catch {
+      } catch (err) {
         return [];
       }
     }
 
+    // Create a single category button and append to the suggestions area
+    function createCategoryButton(cat, selected = false) {
+      const suggestionsDiv = document.getElementById('categorySuggestions');
+      // avoid duplicates
+      const existing = Array.from(suggestionsDiv.querySelectorAll('button')).some(b => b.textContent === cat);
+      if (existing) {
+        if (selected) {
+          const btn = Array.from(suggestionsDiv.querySelectorAll('button')).find(b => b.textContent === cat);
+          btn.classList.add('selected');
+        }
+        return;
+      }
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = cat;
+      if (selected) btn.classList.add('selected');
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+      });
+      suggestionsDiv.appendChild(btn);
+    }
+
+    // Render list of category buttons
     function showCategorySuggestions(categories) {
-      const suggestionsDiv = document.getElementById("categorySuggestions");
-      suggestionsDiv.innerHTML = "";
-      categories.forEach(cat => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = cat;
-        btn.onclick = () => addCategory(cat);
-        suggestionsDiv.appendChild(btn);
+      const suggestionsDiv = document.getElementById('categorySuggestions');
+      suggestionsDiv.innerHTML = '';
+      categories.forEach(cat => createCategoryButton(cat, false));
+    }
+
+    // When user types a new category and confirms (Enter or comma) or blurs, create buttons
+    function setupCategoryInputHandlers() {
+      const input = document.getElementById('categoryInput');
+
+      function parseAndAdd() {
+        const tokens = input.value.split(',').map(s => s.trim()).filter(Boolean);
+        tokens.forEach(t => createCategoryButton(t, true));
+        input.value = '';
+      }
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+          e.preventDefault();
+          parseAndAdd();
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        if (input.value.trim()) parseAndAdd();
       });
     }
 
-    function addCategory(category) {
-      const input = document.getElementById("categoryInput");
-      let current = input.value.split(",").map(s => s.trim()).filter(Boolean);
-      if (!current.includes(category)) {
-        current.push(category);
-        input.value = current.join(", ");
-      }
-    }
+    // The input is reserved for adding new categories; button selection is visual-only.
 
+    // Fetch all recipes for title datalist
     async function fetchAllRecipes() {
       try {
-        const res = await fetch("https://api.github.com/repos/StanKwast/koken/contents/recipes");
+        const res = await fetch('https://api.github.com/repos/StanKwast/koken/contents/recipes');
         if (!res.ok) return [];
         const files = await res.json();
 
         const recipes = [];
         for (const file of files) {
-          if (!file.name.endsWith(".json")) continue;
+          if (!file.name.endsWith('.json')) continue;
           const recipeRes = await fetch(file.download_url);
           if (!recipeRes.ok) continue;
           const data = await recipeRes.json();
@@ -249,78 +151,85 @@ Bestrooi de bovenkant met Parmezaanse kaas, breng op smaak met zout en peper en 
     }
 
     function populateTitleDatalist(recipes) {
-      const datalist = document.getElementById("titleList");
-      datalist.innerHTML = "";
+      const datalist = document.getElementById('titleList');
+      datalist.innerHTML = '';
       recipes.forEach(r => {
-        const option = document.createElement("option");
+        const option = document.createElement('option');
         option.value = r.title;
         datalist.appendChild(option);
       });
     }
 
+    // Fill the form and mark matching category buttons as selected
     function fillRecipeForm(recipe) {
-      document.querySelector('input[name="title"]').value = recipe.title;
-      document.querySelector('input[name="categoryInput"]').value = Array.isArray(recipe.category)
-        ? recipe.category.join(", ")
-        : recipe.category || "";
-      document.querySelector('textarea[name="ingredients"]').value = (recipe.ingredients || []).join("\n");
-      document.querySelector('textarea[name="instructions"]').value = (recipe.instructions || []).join("\n");
+      document.querySelector('input[name="title"]').value = recipe.title || '';
+      const cats = Array.isArray(recipe.category) ? recipe.category : (recipe.category ? [recipe.category] : []);
+      cats.forEach(c => createCategoryButton(c.trim(), true));
+      document.querySelector('textarea[name="ingredients"]').value = (recipe.ingredients || []).join('\n');
+      document.querySelector('textarea[name="instructions"]').value = (recipe.instructions || []).join('\n');
     }
 
-    window.addEventListener("DOMContentLoaded", async () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       const categories = await fetchExistingCategories();
       showCategorySuggestions(categories);
+      setupCategoryInputHandlers();
 
       const allRecipes = await fetchAllRecipes();
       populateTitleDatalist(allRecipes);
 
-      const titleInput = document.getElementById("titleInput");
-      titleInput.addEventListener("change", () => {
+      const titleInput = document.getElementById('titleInput');
+      titleInput.addEventListener('change', () => {
         const match = allRecipes.find(r => r.title === titleInput.value.trim());
         if (match) fillRecipeForm(match.data);
       });
     });
 
-    document.getElementById("recipeForm").addEventListener("submit", async function (e) {
+    document.getElementById('recipeForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const formData = new FormData(e.target);
-      const categories = formData.get("categoryInput").split(",").map(s => s.trim()).filter(Boolean);
+
+      // categories: union of selected buttons and any remaining items in the input
+      const selected = Array.from(document.querySelectorAll('#categorySuggestions button.selected')).map(b => b.textContent.trim());
+      const typed = String(formData.get('categoryInput') || '').split(',').map(s => s.trim()).filter(Boolean);
+      const categories = Array.from(new Set([...selected, ...typed]));
 
       const recipe = {
-        title: formData.get("title").trim(),
+        title: formData.get('title').trim(),
         category: categories,
-        ingredients: formData.get("ingredients").split("\n"),
-        instructions: formData.get("instructions").split("\n"),
+        ingredients: formData.get('ingredients').split('\n'),
+        instructions: formData.get('instructions').split('\n'),
         timestamp: new Date().toISOString()
       };
 
-      const filename = recipe.title.toLowerCase().replace(/\s+/g, "_") + ".json";
+      const filename = recipe.title.toLowerCase().replace(/\s+/g, '_') + '.json';
 
-      const status = document.getElementById("status");
-      status.textContent = "Versturen...";
+      const status = document.getElementById('status');
+      status.textContent = 'Versturen...';
 
       try {
-        const response = await fetch("https://recept-form.vercel.app/api/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('https://recept-form.vercel.app/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ filename, recipe })
         });
 
         if (response.ok) {
-          status.textContent = "Recept succesvol ingediend!";
+          status.textContent = 'Recept succesvol ingediend!';
           e.target.reset();
+          // clear button selections after successful submit
+          document.querySelectorAll('#categorySuggestions button.selected').forEach(b => b.classList.remove('selected'));
         } else {
           const error = await response.json();
-          status.textContent = "Fout: " + (error?.message || "Onbekende fout.");
+          status.textContent = 'Fout: ' + (error?.message || 'Onbekende fout.');
         }
       } catch (err) {
-        status.textContent = "Netwerkfout: " + err.message;
+        status.textContent = 'Netwerkfout: ' + err.message;
       }
     });
 
-    document.getElementById("viewRecipesBtn").addEventListener("click", () => {
-      window.location.href = "https://stankwast.github.io/koken";
+    document.getElementById('viewRecipesBtn').addEventListener('click', () => {
+      window.location.href = 'https://stankwast.github.io/koken';
     });
   </script>
 
