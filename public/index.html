@@ -162,11 +162,17 @@ Bestrooi de bovenkant met Parmezaanse kaas, breng op smaak met zout en peper en 
 
     // Fill the form and mark matching category buttons as selected
     function fillRecipeForm(recipe) {
+      // clear previous selections first
+      clearCategorySelections();
       document.querySelector('input[name="title"]').value = recipe.title || '';
       const cats = Array.isArray(recipe.category) ? recipe.category : (recipe.category ? [recipe.category] : []);
       cats.forEach(c => createCategoryButton(c.trim(), true));
       document.querySelector('textarea[name="ingredients"]').value = (recipe.ingredients || []).join('\n');
       document.querySelector('textarea[name="instructions"]').value = (recipe.instructions || []).join('\n');
+    }
+
+    function clearCategorySelections() {
+      document.querySelectorAll('#categorySuggestions button.selected').forEach(b => b.classList.remove('selected'));
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -181,6 +187,12 @@ Bestrooi de bovenkant met Parmezaanse kaas, breng op smaak met zout en peper en 
       titleInput.addEventListener('change', () => {
         const match = allRecipes.find(r => r.title === titleInput.value.trim());
         if (match) fillRecipeForm(match.data);
+        else clearCategorySelections();
+      });
+
+      // Clear category selections when user starts typing a new title
+      titleInput.addEventListener('input', () => {
+        clearCategorySelections();
       });
     });
 
